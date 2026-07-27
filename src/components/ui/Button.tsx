@@ -121,11 +121,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing[3],
   },
   size_md: {
-    height: sizes.controlLg,
+    height: sizes.control,
     paddingHorizontal: spacing[4],
   },
   size_lg: {
-    height: sizes.controlLg,
+    height: sizes.control,
     paddingHorizontal: spacing[6],
   },
 
@@ -141,7 +141,6 @@ const styles = StyleSheet.create({
   // Text styles
   text: {
     ...typography.variants.button,
-    fontFamily: typography.fontFamily,
   },
   text_primary: {
     color: colors.text.inverse,
