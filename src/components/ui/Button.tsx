@@ -2,6 +2,7 @@ import React from 'react';
 import {
   TouchableOpacity,
   Text,
+  View,
   StyleSheet,
   ActivityIndicator,
   ViewStyle,
@@ -11,14 +12,19 @@ import { colors } from '../../theme/colors';
 import { typography } from '../../theme/typography';
 import { spacing } from '../../theme/spacing';
 import { borders } from '../../theme/borders';
+import { sizes } from '../../theme/sizes';
+
+type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'soft' | 'social';
 
 interface ButtonProps {
   title: string;
   onPress: () => void;
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
+  variant?: ButtonVariant;
   size?: 'sm' | 'md' | 'lg';
   disabled?: boolean;
   loading?: boolean;
+  /** Ícone exibido antes do rótulo (ex.: logo do Google). */
+  leftIcon?: React.ReactNode;
   style?: ViewStyle;
   textStyle?: TextStyle;
   testID?: string;
@@ -31,6 +37,7 @@ export const Button: React.FC<ButtonProps> = ({
   size = 'md',
   disabled = false,
   loading = false,
+  leftIcon,
   style,
   textStyle,
   testID,
@@ -61,11 +68,14 @@ export const Button: React.FC<ButtonProps> = ({
     >
       {loading ? (
         <ActivityIndicator
-          color={variant === 'primary' ? colors.neutral[0] : colors.primary[500]}
+          color={variant === 'primary' ? colors.text.inverse : colors.primary[500]}
           size="small"
         />
       ) : (
-        <Text style={textStyles}>{title}</Text>
+        <>
+          {leftIcon && <View style={styles.leftIcon}>{leftIcon}</View>}
+          <Text style={textStyles}>{title}</Text>
+        </>
       )}
     </TouchableOpacity>
   );
@@ -74,11 +84,11 @@ export const Button: React.FC<ButtonProps> = ({
 const styles = StyleSheet.create({
   base: {
     alignItems: 'center',
-    borderRadius: borders.radii.md,
+    borderRadius: borders.radii.lg,
     flexDirection: 'row',
     justifyContent: 'center',
   },
-  
+
   // Variants
   primary: {
     backgroundColor: colors.primary[500],
@@ -94,32 +104,46 @@ const styles = StyleSheet.create({
   ghost: {
     backgroundColor: 'transparent',
   },
-  
+  /** Botão tonal de baixa ênfase — fundo lavanda, texto navy. */
+  soft: {
+    backgroundColor: colors.primary[50],
+  },
+  /** Login social — fundo branco com traço neutro. */
+  social: {
+    backgroundColor: colors.surface.raised,
+    borderColor: colors.surface.border,
+    borderWidth: borders.widths.thin,
+  },
+
   // Sizes
   size_sm: {
+    height: sizes.controlSm,
     paddingHorizontal: spacing[3],
-    paddingVertical: spacing[2],
   },
   size_md: {
+    height: sizes.control,
     paddingHorizontal: spacing[4],
-    paddingVertical: spacing[3],
   },
   size_lg: {
+    height: sizes.control,
     paddingHorizontal: spacing[6],
-    paddingVertical: spacing[4],
   },
-  
+
   // Disabled state
   disabled: {
     opacity: 0.5,
   },
-  
+
+  leftIcon: {
+    marginRight: spacing[3],
+  },
+
   // Text styles
   text: {
     ...typography.variants.button,
   },
   text_primary: {
-    color: colors.neutral[0],
+    color: colors.text.inverse,
   },
   text_secondary: {
     color: colors.primary[500],
@@ -130,7 +154,13 @@ const styles = StyleSheet.create({
   text_ghost: {
     color: colors.primary[500],
   },
-  
+  text_soft: {
+    color: colors.primary[500],
+  },
+  text_social: {
+    color: colors.text.primary,
+  },
+
   // Text sizes
   text_size_sm: {
     fontSize: typography.sizes.sm,
@@ -141,7 +171,7 @@ const styles = StyleSheet.create({
   text_size_lg: {
     fontSize: typography.sizes.lg,
   },
-  
+
   textDisabled: {
     color: colors.neutral[500],
   },

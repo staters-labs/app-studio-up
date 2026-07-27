@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import { useRootNavigation } from '../../hooks/useNavigation';
 import { Ionicons } from '@expo/vector-icons';
-import { Button, Input, Card } from '../../components';
+import { Button, Input, GoogleIcon } from '../../components';
+import { AuthLayout } from './AuthLayout';
 import { colors } from '../../theme/colors';
-import { typography } from '../../theme/typography';
 import { spacing } from '../../theme/spacing';
+import { sizes } from '../../theme/sizes';
 import { useAppStore } from '../../stores/useAppStore';
 
 export const RegisterScreen: React.FC = () => {
@@ -14,13 +15,11 @@ export const RegisterScreen: React.FC = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
   const handleRegister = async () => {
-    if (!name || !email || !password || !confirmPassword) return;
-    if (password !== confirmPassword) return;
-    
+    if (!name || !email || !password) return;
+
     setLoading(true);
     // TODO: Implement actual Clerk registration
     setTimeout(() => {
@@ -34,131 +33,107 @@ export const RegisterScreen: React.FC = () => {
     }, 1000);
   };
 
+  const handleGoogleSignUp = async () => {
+    // TODO: Implement Google OAuth with Clerk
+    console.log('Google sign up');
+  };
+
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Ionicons name="chevron-back" size={24} color={colors.primary[500]} />
-        </TouchableOpacity>
-        <Text style={styles.logo}>Studio Up</Text>
-        <Text style={styles.subtitle}>Crie sua conta</Text>
-      </View>
+    <AuthLayout title="Criar conta">
+      <Input
+        label="Nome"
+        value={name}
+        onChangeText={setName}
+        placeholder="Nome"
+        autoCapitalize="words"
+        autoComplete="name"
+        leftIcon={
+          <Ionicons
+            name="person-outline"
+            size={sizes.icon.md}
+            color={colors.text.placeholder}
+          />
+        }
+      />
 
-      <Card style={styles.card}>
-        <Text style={styles.title}>Cadastro</Text>
-        
-        <Input
-          label="Nome completo"
-          value={name}
-          onChangeText={setName}
-          placeholder="Seu nome"
-          autoCapitalize="words"
-        />
-        
-        <Input
-          label="E-mail"
-          value={email}
-          onChangeText={setEmail}
-          placeholder="seu@email.com"
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-        
-        <Input
-          label="Senha"
-          value={password}
-          onChangeText={setPassword}
-          placeholder="Mínimo 8 caracteres"
-          secureTextEntry={!showPassword}
-          rightIcon={
-            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-              <Ionicons
-                name={showPassword ? 'eye-off' : 'eye'}
-                size={20}
-                color={colors.neutral[500]}
-              />
-            </TouchableOpacity>
-          }
-        />
-        
-        <Input
-          label="Confirmar senha"
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-          placeholder="Repita a senha"
-          secureTextEntry={!showPassword}
-        />
-        
-        <Button
-          title="Criar conta"
-          onPress={handleRegister}
-          loading={isLoading}
-          style={styles.registerButton}
-        />
-      </Card>
+      <Input
+        label="E-mail"
+        value={email}
+        onChangeText={setEmail}
+        placeholder="E-mail"
+        keyboardType="email-address"
+        autoCapitalize="none"
+        autoComplete="email"
+        leftIcon={
+          <Ionicons
+            name="mail-outline"
+            size={sizes.icon.md}
+            color={colors.text.placeholder}
+          />
+        }
+      />
 
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>Já tem uma conta?</Text>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Text style={styles.footerLink}>Entrar</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+      <Input
+        label="Senha"
+        value={password}
+        onChangeText={setPassword}
+        placeholder="Senha"
+        secureTextEntry={!showPassword}
+        autoCapitalize="none"
+        autoComplete="new-password"
+        leftIcon={
+          <Ionicons
+            name="lock-closed-outline"
+            size={sizes.icon.md}
+            color={colors.text.placeholder}
+          />
+        }
+        rightIcon={
+          <TouchableOpacity
+            onPress={() => setShowPassword(!showPassword)}
+            accessibilityRole="button"
+            accessibilityLabel={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+          >
+            <Ionicons
+              name={showPassword ? 'eye-outline' : 'eye-off-outline'}
+              size={sizes.icon.md}
+              color={colors.text.placeholder}
+            />
+          </TouchableOpacity>
+        }
+      />
+
+      <Button
+        title="Criar conta"
+        onPress={handleRegister}
+        loading={isLoading}
+        style={styles.primaryButton}
+      />
+
+      <Button
+        title="Cadastrar com Google"
+        onPress={handleGoogleSignUp}
+        variant="social"
+        leftIcon={<GoogleIcon size={sizes.icon.lg} />}
+        style={styles.stackedButton}
+      />
+
+      <Button
+        title="Já tenho conta"
+        onPress={() => navigation.goBack()}
+        variant="soft"
+        style={styles.stackedButton}
+      />
+    </AuthLayout>
   );
 };
 
 const styles = StyleSheet.create({
-  backButton: {
-    left: 0,
-    padding: spacing[2],
-    position: 'absolute',
-    top: 0,
+  primaryButton: {
+    marginTop: spacing[2],
   },
-  card: {
-    padding: spacing[6],
-  },
-  container: {
-    backgroundColor: colors.neutral[50],
-    flex: 1,
-  },
-  content: {
-    padding: spacing[4],
-    paddingTop: spacing[8],
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+
+  stackedButton: {
     marginTop: spacing[6],
-  },
-  footerLink: {
-    ...typography.variants.body,
-    color: colors.primary[500],
-    fontWeight: typography.weights.semibold,
-    marginLeft: spacing[1],
-  },
-  footerText: {
-    ...typography.variants.body,
-    color: colors.neutral[600],
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: spacing[8],
-  },
-  logo: {
-    ...typography.variants.h1,
-    color: colors.primary[500],
-    marginBottom: spacing[2],
-  },
-  registerButton: {
-    marginTop: spacing[4],
-  },
-  subtitle: {
-    ...typography.variants.body,
-    color: colors.neutral[600],
-  },
-  title: {
-    ...typography.variants.h3,
-    color: colors.neutral[900],
-    marginBottom: spacing[6],
   },
 });

@@ -28,52 +28,48 @@ export const typography = {
     bold: '700' as const,
   },
   
-  lineHeights: {
-    tight: 1.2,
-    normal: 1.5,
-    relaxed: 1.75,
-  },
-  
+  // lineHeight no React Native é medido em pixels absolutos, nunca em múltiplos
+  // do fontSize — valores fracionários esmagam a linha e borram a renderização.
   variants: {
     h1: {
       fontSize: 36,
       fontWeight: '700' as const,
-      lineHeight: 1.2,
+      lineHeight: 44,
     },
     h2: {
       fontSize: 30,
       fontWeight: '700' as const,
-      lineHeight: 1.2,
+      lineHeight: 38,
     },
     h3: {
       fontSize: 24,
       fontWeight: '600' as const,
-      lineHeight: 1.3,
+      lineHeight: 32,
     },
     h4: {
       fontSize: 20,
       fontWeight: '600' as const,
-      lineHeight: 1.4,
+      lineHeight: 28,
     },
     body: {
       fontSize: 16,
       fontWeight: '400' as const,
-      lineHeight: 1.5,
+      lineHeight: 24,
     },
     bodySmall: {
       fontSize: 14,
       fontWeight: '400' as const,
-      lineHeight: 1.5,
+      lineHeight: 20,
     },
     caption: {
       fontSize: 12,
       fontWeight: '400' as const,
-      lineHeight: 1.5,
+      lineHeight: 16,
     },
     button: {
       fontSize: 16,
       fontWeight: '600' as const,
-      lineHeight: 1.5,
+      lineHeight: 22,
     },
   },
 } as const;
