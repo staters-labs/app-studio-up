@@ -1,6 +1,7 @@
 export const sizes = {
-  /** Altura padrão de inputs e botões (mockup de autenticação). */
+  /** Altura padrão de inputs e botões (iOS safe minimum). */
   control: 56,
+  controlLg: 60,
   controlSm: 40,
   /** Recuo horizontal do conteúdo das telas. */
   screenPadding: 28,

@@ -72,8 +72,9 @@ export const typography = {
     },
     button: {
       fontSize: 16,
-      fontWeight: '600' as const,
+      fontWeight: '700' as const,
       lineHeight: 1.5,
+      letterSpacing: 0.5,
     },
   },
 } as const;
