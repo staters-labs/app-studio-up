@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRootNavigation } from '../../hooks/useNavigation';
 import { Ionicons } from '@expo/vector-icons';
-import { Button, Input, Card } from '../../components';
+import { Button, Input, GoogleIcon } from '../../components';
+import { AuthLayout } from './AuthLayout';
 import { colors } from '../../theme/colors';
 import { typography } from '../../theme/typography';
 import { spacing } from '../../theme/spacing';
+import { sizes } from '../../theme/sizes';
 import { useAppStore } from '../../stores/useAppStore';
 
 export const LoginScreen: React.FC = () => {
@@ -17,7 +19,7 @@ export const LoginScreen: React.FC = () => {
 
   const handleLogin = async () => {
     if (!email || !password) return;
-    
+
     setLoading(true);
     // TODO: Implement actual Clerk authentication
     setTimeout(() => {
@@ -37,148 +39,111 @@ export const LoginScreen: React.FC = () => {
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <View style={styles.header}>
-        <Text style={styles.logo}>Studio Up</Text>
-        <Text style={styles.subtitle}>Gestão de beleza simplificada</Text>
-      </View>
+    <AuthLayout title="Entrar">
+      <Input
+        label="E-mail"
+        value={email}
+        onChangeText={setEmail}
+        placeholder="E-mail"
+        keyboardType="email-address"
+        autoCapitalize="none"
+        autoComplete="email"
+        leftIcon={
+          <Ionicons
+            name="mail-outline"
+            size={sizes.icon.md}
+            color={colors.text.placeholder}
+          />
+        }
+      />
 
-      <Card style={styles.card}>
-        <Text style={styles.title}>Entrar</Text>
-        
-        <Input
-          label="E-mail"
-          value={email}
-          onChangeText={setEmail}
-          placeholder="seu@email.com"
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-        
-        <Input
-          label="Senha"
-          value={password}
-          onChangeText={setPassword}
-          placeholder="Sua senha"
-          secureTextEntry={!showPassword}
-          rightIcon={
-            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-              <Ionicons
-                name={showPassword ? 'eye-off' : 'eye'}
-                size={20}
-                color={colors.neutral[500]}
-              />
-            </TouchableOpacity>
-          }
-        />
-        
-        <TouchableOpacity style={styles.forgotPassword}>
-          <Text style={styles.forgotPasswordText}>Esqueceu a senha?</Text>
-        </TouchableOpacity>
-        
-        <Button
-          title="Entrar"
-          onPress={handleLogin}
-          loading={isLoading}
-          style={styles.loginButton}
-        />
-        
-        <View style={styles.divider}>
-          <View style={styles.dividerLine} />
-          <Text style={styles.dividerText}>ou</Text>
-          <View style={styles.dividerLine} />
-        </View>
-        
-        <Button
-          title="Continuar com Google"
-          onPress={handleGoogleLogin}
-          variant="outline"
-          style={styles.googleButton}
-        />
-      </Card>
+      <Input
+        label="Senha"
+        value={password}
+        onChangeText={setPassword}
+        placeholder="Senha"
+        secureTextEntry={!showPassword}
+        autoCapitalize="none"
+        autoComplete="password"
+        leftIcon={
+          <Ionicons
+            name="lock-closed-outline"
+            size={sizes.icon.md}
+            color={colors.text.placeholder}
+          />
+        }
+        rightIcon={
+          <TouchableOpacity
+            onPress={() => setShowPassword(!showPassword)}
+            accessibilityRole="button"
+            accessibilityLabel={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+          >
+            <Ionicons
+              name={showPassword ? 'eye-outline' : 'eye-off-outline'}
+              size={sizes.icon.md}
+              color={colors.text.placeholder}
+            />
+          </TouchableOpacity>
+        }
+      />
 
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>Não tem uma conta?</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-          <Text style={styles.footerLink}>Criar conta</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+      <Button
+        title="Entrar"
+        onPress={handleLogin}
+        loading={isLoading}
+        style={styles.primaryButton}
+      />
+
+      <Button
+        title="Entrar com Google"
+        onPress={handleGoogleLogin}
+        variant="social"
+        leftIcon={<GoogleIcon size={sizes.icon.lg} />}
+        style={styles.stackedButton}
+      />
+
+      <Button
+        title="Recuperar senha"
+        onPress={() => navigation.navigate('ForgotPassword')}
+        variant="soft"
+        style={styles.stackedButton}
+      />
+
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Register')}
+        style={styles.footer}
+        accessibilityRole="button"
+      >
+        <Text style={styles.footerText}>
+          Não tem conta? <Text style={styles.footerLink}>Criar conta</Text>
+        </Text>
+      </TouchableOpacity>
+    </AuthLayout>
   );
 };
 
 const styles = StyleSheet.create({
-  card: {
-    padding: spacing[6],
-  },
-  container: {
-    backgroundColor: colors.neutral[50],
-    flex: 1,
-  },
-  content: {
-    padding: spacing[4],
-    paddingTop: spacing[12],
-  },
-  divider: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    marginVertical: spacing[6],
-  },
-  dividerLine: {
-    backgroundColor: colors.neutral[300],
-    flex: 1,
-    height: 1,
-  },
-  dividerText: {
-    ...typography.variants.bodySmall,
-    color: colors.neutral[500],
-    marginHorizontal: spacing[3],
-  },
   footer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    alignItems: 'center',
     marginTop: spacing[6],
+    paddingVertical: spacing[2],
   },
+
   footerLink: {
-    ...typography.variants.body,
     color: colors.primary[500],
     fontWeight: typography.weights.semibold,
-    marginLeft: spacing[1],
   },
+
   footerText: {
-    ...typography.variants.body,
-    color: colors.neutral[600],
-  },
-  forgotPassword: {
-    alignSelf: 'flex-end',
-    marginBottom: spacing[4],
-  },
-  forgotPasswordText: {
     ...typography.variants.bodySmall,
-    color: colors.primary[500],
+    color: colors.text.secondary,
   },
-  googleButton: {
+
+  primaryButton: {
     marginTop: spacing[2],
   },
-  header: {
-    alignItems: 'center',
-    marginBottom: spacing[8],
-  },
-  loginButton: {
-    marginTop: spacing[2],
-  },
-  logo: {
-    ...typography.variants.h1,
-    color: colors.primary[500],
-    marginBottom: spacing[2],
-  },
-  subtitle: {
-    ...typography.variants.body,
-    color: colors.neutral[600],
-  },
-  title: {
-    ...typography.variants.h3,
-    color: colors.neutral[900],
-    marginBottom: spacing[6],
+
+  stackedButton: {
+    marginTop: spacing[6],
   },
 });

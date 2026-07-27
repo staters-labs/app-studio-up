@@ -13,6 +13,7 @@ import { colors } from '../../theme/colors';
 import { typography } from '../../theme/typography';
 import { spacing } from '../../theme/spacing';
 import { borders } from '../../theme/borders';
+import { sizes } from '../../theme/sizes';
 
 interface InputProps extends TextInputProps {
   label?: string;
@@ -64,7 +65,7 @@ export const Input: React.FC<InputProps> = ({
           style={inputStyles}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
-          placeholderTextColor={colors.neutral[500]}
+          placeholderTextColor={colors.text.placeholder}
           {...textInputProps}
         />
         
@@ -82,59 +83,61 @@ export const Input: React.FC<InputProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: spacing[4],
+    marginBottom: spacing[5],
   },
-  
+
   errorText: {
     color: colors.error[500],
   },
-  
+
   helperText: {
     ...typography.variants.caption,
-    color: colors.neutral[600],
+    color: colors.text.secondary,
     marginTop: spacing[1],
   },
-  
+
   iconContainer: {
-    paddingHorizontal: spacing[3],
+    paddingHorizontal: spacing[4],
   },
-  
+
   input: {
     flex: 1,
     ...typography.variants.body,
-    color: colors.neutral[900],
+    color: colors.text.primary,
+    height: '100%',
     paddingHorizontal: spacing[4],
-    paddingVertical: spacing[3],
   },
-  
+
   inputContainer: {
     alignItems: 'center',
-    backgroundColor: colors.neutral[0],
-    borderColor: colors.neutral[300],
-    borderRadius: borders.radii.md,
-    borderWidth: borders.widths.medium,
+    backgroundColor: colors.surface.raised,
+    borderColor: colors.surface.border,
+    borderRadius: borders.radii.lg,
+    borderWidth: borders.widths.thin,
     flexDirection: 'row',
+    height: sizes.control,
   },
-  
+
   inputContainerError: {
     borderColor: colors.error[500],
   },
-  
+
   inputContainerFocused: {
     borderColor: colors.primary[500],
   },
-  
+
   inputWithLeftIcon: {
-    paddingLeft: spacing[1],
+    paddingLeft: 0,
   },
-  
+
   inputWithRightIcon: {
-    paddingRight: spacing[1],
+    paddingRight: 0,
   },
-  
+
   label: {
-    ...typography.variants.bodySmall,
-    color: colors.neutral[700],
-    marginBottom: spacing[1],
+    color: colors.text.primary,
+    fontSize: typography.sizes.sm,
+    fontWeight: typography.weights.bold,
+    marginBottom: spacing[2],
   },
 });

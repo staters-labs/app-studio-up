@@ -3,6 +3,7 @@ import { typography } from './typography';
 import { spacing } from './spacing';
 import { borders } from './borders';
 import { shadows } from './shadows';
+import { sizes } from './sizes';
 
 export const theme = {
   colors,
@@ -10,7 +11,8 @@ export const theme = {
   spacing,
   borders,
   shadows,
-  
+  sizes,
+
   // Common styles
   common: {
     container: {
