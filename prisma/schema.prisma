@@ -1,0 +1,273 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model
+model User {
+  id            String    @id @default(cuid())
+  clerkId       String    @unique
+  email         String    @unique
+  name          String
+  phone         String?
+  avatar        String?
+  role          UserRole  @default(OWNER)
+  studioId      String?
+  studio        Studio?   @relation(fields: [studioId], references: [id])
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  serviceOrders ServiceOrder[]
+  cashRegisters CashRegister[]
+
+  @@index([studioId])
+  @@index([clerkId])
+}
+
+// User roles
+enum UserRole {
+  OWNER
+  ADMIN
+  PROVIDER
+}
+
+// Studio model
+model Studio {
+  id            String      @id @default(cuid())
+  name          String
+  type          StudioType
+  address       String?
+  phone         String?
+  email         String?
+  logo          String?
+  ownerId       String
+  owner         User        @relation(fields: [ownerId], references: [id])
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  // Relations
+  users         User[]
+  providers     Provider[]
+  services      Service[]
+  products      Product[]
+  serviceOrders ServiceOrder[]
+  cashRegisters CashRegister[]
+  categories    ServiceCategory[]
+
+  @@index([ownerId])
+}
+
+// Studio types
+enum StudioType {
+  SALON
+  BARBERSHOP
+  STUDIO
+  OTHER
+}
+
+// Provider model
+model Provider {
+  id            String      @id @default(cuid())
+  name          String
+  email         String?
+  phone         String?
+  avatar        String?
+  studioId      String
+  studio        Studio      @relation(fields: [studioId], references: [id])
+  isActive      Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  // Relations
+  serviceOrders ServiceOrder[]
+
+  @@index([studioId])
+}
+
+// Service Category model
+model ServiceCategory {
+  id            String      @id @default(cuid())
+  name          String
+  studioId      String
+  studio        Studio      @relation(fields: [studioId], references: [id])
+  createdAt     DateTime    @default(now())
+
+  // Relations
+  services      Service[]
+
+  @@index([studioId])
+}
+
+// Service model
+model Service {
+  id            String          @id @default(cuid())
+  name          String
+  description   String?
+  price         Decimal         @db.Decimal(10, 2)
+  duration      Int             // in minutes
+  categoryId    String?
+  category      ServiceCategory? @relation(fields: [categoryId], references: [id])
+  studioId      String
+  studio        Studio          @relation(fields: [studioId], references: [id])
+  isActive      Boolean         @default(true)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  // Relations
+  serviceOrders ServiceOrderItem[]
+
+  @@index([studioId])
+  @@index([categoryId])
+}
+
+// Product model
+model Product {
+  id              String      @id @default(cuid())
+  name            String
+  description     String?
+  cost            Decimal     @db.Decimal(10, 2)
+  price           Decimal     @db.Decimal(10, 2)
+  stock           Int         @default(0)
+  minStock        Int?
+  unit            String      @default("un")
+  isForSale       Boolean     @default(true)
+  isForInternalUse Boolean   @default(false)
+  studioId        String
+  studio          Studio      @relation(fields: [studioId], references: [id])
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  // Relations
+  serviceOrderProducts ServiceOrderProduct[]
+
+  @@index([studioId])
+}
+
+// Payment methods
+enum PaymentMethod {
+  CASH
+  CREDIT_CARD
+  DEBIT_CARD
+  PIX
+  OTHER
+}
+
+// Order status
+enum OrderStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+// Service Order model
+model ServiceOrder {
+  id                String                @id @default(cuid())
+  studioId          String
+  studio            Studio                @relation(fields: [studioId], references: [id])
+  providerId        String
+  provider          Provider              @relation(fields: [providerId], references: [id])
+  clientId          String?
+  client            User?                 @relation(fields: [clientId], references: [id])
+  paymentMethod     PaymentMethod
+  totalAmount       Decimal               @db.Decimal(10, 2)
+  totalCost         Decimal               @db.Decimal(10, 2)
+  totalCommission   Decimal               @db.Decimal(10, 2)
+  netProfit         Decimal               @db.Decimal(10, 2)
+  status            OrderStatus           @default(COMPLETED)
+  notes             String?
+  createdAt         DateTime              @default(now())
+  updatedAt         DateTime              @updatedAt
+
+  // Relations
+  items             ServiceOrderItem[]
+  products          ServiceOrderProduct[]
+
+  @@index([studioId])
+  @@index([providerId])
+  @@index([clientId])
+  @@index([createdAt])
+}
+
+// Service Order Item model
+model ServiceOrderItem {
+  id                String        @id @default(cuid())
+  serviceOrderId    String
+  serviceOrder      ServiceOrder  @relation(fields: [serviceOrderId], references: [id], onDelete: Cascade)
+  serviceId         String
+  service           Service       @relation(fields: [serviceId], references: [id])
+  quantity          Int           @default(1)
+  price             Decimal       @db.Decimal(10, 2)
+
+  @@index([serviceOrderId])
+  @@index([serviceId])
+}
+
+// Service Order Product model
+model ServiceOrderProduct {
+  id                String        @id @default(cuid())
+  serviceOrderId    String
+  serviceOrder      ServiceOrder  @relation(fields: [serviceOrderId], references: [id], onDelete: Cascade)
+  productId         String
+  product           Product       @relation(fields: [productId], references: [id])
+  quantity          Int           @default(1)
+  cost              Decimal       @db.Decimal(10, 2)
+
+  @@index([serviceOrderId])
+  @@index([productId])
+}
+
+// Cash Register Entry type
+enum CashEntryType {
+  INCOME
+  EXPENSE
+  COMMISSION
+  PRODUCT_COST
+}
+
+// Cash Register model
+model CashRegister {
+  id                String              @id @default(cuid())
+  studioId          String
+  studio            Studio              @relation(fields: [studioId], references: [id])
+  date              DateTime            @db.Date
+  totalIncome       Decimal             @db.Decimal(10, 2) @default(0)
+  totalExpenses     Decimal             @db.Decimal(10, 2) @default(0)
+  totalCommissions  Decimal             @db.Decimal(10, 2) @default(0)
+  totalProductCosts Decimal             @db.Decimal(10, 2) @default(0)
+  netProfit         Decimal             @db.Decimal(10, 2) @default(0)
+  isOpen            Boolean             @default(true)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  // Relations
+  entries           CashRegisterEntry[]
+  userId            String
+  user              User                @relation(fields: [userId], references: [id])
+
+  @@unique([studioId, date])
+  @@index([studioId])
+  @@index([date])
+}
+
+// Cash Register Entry model
+model CashRegisterEntry {
+  id                String        @id @default(cuid())
+  cashRegisterId    String
+  cashRegister      CashRegister  @relation(fields: [cashRegisterId], references: [id], onDelete: Cascade)
+  type              CashEntryType
+  amount            Decimal       @db.Decimal(10, 2)
+  description       String
+  serviceOrderId    String?
+
+  @@index([cashRegisterId])
+  @@index([type])
+}

@@ -1,0 +1,204 @@
+import React from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { Header, Card, Button } from '../../components';
+import { colors } from '../../theme/colors';
+import { typography } from '../../theme/typography';
+import { spacing } from '../../theme/spacing';
+import { useAppStore } from '../../stores/useAppStore';
+
+export const ProfileScreen: React.FC = () => {
+  const { user, studio, logout } = useAppStore();
+
+  const menuItems = [
+    {
+      id: 'edit-profile',
+      title: 'Editar Perfil',
+      icon: 'person-outline',
+      onPress: () => {},
+    },
+    {
+      id: 'studio-settings',
+      title: 'Configurações do Studio',
+      icon: 'business-outline',
+      onPress: () => {},
+    },
+    {
+      id: 'subscription',
+      title: 'Assinatura',
+      icon: 'card-outline',
+      onPress: () => {},
+    },
+    {
+      id: 'help',
+      title: 'Ajuda e Suporte',
+      icon: 'help-circle-outline',
+      onPress: () => {},
+    },
+    {
+      id: 'about',
+      title: 'Sobre o App',
+      icon: 'information-circle-outline',
+      onPress: () => {},
+    },
+  ];
+
+  const handleLogout = () => {
+    logout();
+  };
+
+  return (
+    <View style={styles.container}>
+      <Header title="Perfil" showBackButton />
+      
+      <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
+        <Card style={styles.profileCard}>
+          <View style={styles.avatarContainer}>
+            <View style={styles.avatar}>
+              <Text style={styles.avatarText}>
+                {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+              </Text>
+            </View>
+            <Text style={styles.userName}>{user?.name || 'Usuário'}</Text>
+            <Text style={styles.userEmail}>{user?.email || 'email@exemplo.com'}</Text>
+            <Text style={styles.userRole}>{user?.role || 'OWNER'}</Text>
+          </View>
+        </Card>
+
+        <Card style={styles.studioCard}>
+          <Text style={styles.studioTitle}>Meu Studio</Text>
+          <View style={styles.studioInfo}>
+            <Ionicons name="business" size={24} color={colors.primary[500]} />
+            <View style={styles.studioDetails}>
+              <Text style={styles.studioName}>{studio?.name || 'Studio não configurado'}</Text>
+              <Text style={styles.studioType}>{studio?.type || 'Configure seu studio'}</Text>
+            </View>
+          </View>
+        </Card>
+
+        <Card style={styles.menuCard}>
+          {menuItems.map((item, index) => (
+            <TouchableOpacity
+              key={item.id}
+              style={[
+                styles.menuItem,
+                index < menuItems.length - 1 && styles.menuItemBorder,
+              ]}
+              onPress={item.onPress}
+            >
+              <View style={styles.menuItemLeft}>
+                <Ionicons name={item.icon as React.ComponentProps<typeof Ionicons>['name']} size={20} color={colors.neutral[700]} />
+                <Text style={styles.menuItemTitle}>{item.title}</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color={colors.neutral[400]} />
+            </TouchableOpacity>
+          ))}
+        </Card>
+
+        <Button
+          title="Sair da conta"
+          onPress={handleLogout}
+          variant="outline"
+          style={styles.logoutButton}
+        />
+      </ScrollView>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  avatar: {
+    alignItems: 'center',
+    backgroundColor: colors.primary[500],
+    borderRadius: 40,
+    height: 80,
+    justifyContent: 'center',
+    marginBottom: spacing[3],
+    width: 80,
+  },
+  avatarContainer: {
+    alignItems: 'center',
+    padding: spacing[4],
+  },
+  avatarText: {
+    ...typography.variants.h1,
+    color: colors.neutral[0],
+  },
+  container: {
+    backgroundColor: colors.neutral[50],
+    flex: 1,
+  },
+  content: {
+    flex: 1,
+  },
+  contentContainer: {
+    padding: spacing[4],
+  },
+  logoutButton: {
+    marginTop: spacing[2],
+  },
+  menuCard: {
+    marginBottom: spacing[4],
+  },
+  menuItem: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: spacing[4],
+  },
+  menuItemBorder: {
+    borderBottomColor: colors.neutral[200],
+    borderBottomWidth: 1,
+  },
+  menuItemLeft: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  menuItemTitle: {
+    ...typography.variants.body,
+    color: colors.neutral[900],
+    marginLeft: spacing[3],
+  },
+  profileCard: {
+    marginBottom: spacing[4],
+  },
+  studioCard: {
+    marginBottom: spacing[4],
+  },
+  studioDetails: {
+    marginLeft: spacing[3],
+  },
+  studioInfo: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  studioName: {
+    ...typography.variants.body,
+    color: colors.neutral[900],
+    fontWeight: typography.weights.medium,
+  },
+  studioTitle: {
+    ...typography.variants.h4,
+    color: colors.neutral[900],
+    marginBottom: spacing[3],
+  },
+  studioType: {
+    ...typography.variants.bodySmall,
+    color: colors.neutral[600],
+  },
+  userEmail: {
+    ...typography.variants.body,
+    color: colors.neutral[600],
+    marginBottom: spacing[1],
+  },
+  userName: {
+    ...typography.variants.h3,
+    color: colors.neutral[900],
+    marginBottom: spacing[1],
+  },
+  userRole: {
+    ...typography.variants.bodySmall,
+    color: colors.primary[500],
+    fontWeight: typography.weights.medium,
+  },
+});
