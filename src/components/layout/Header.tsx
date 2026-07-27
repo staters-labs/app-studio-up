@@ -57,23 +57,23 @@ export const Header: React.FC<HeaderProps> = ({
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: spacing[4],
-    paddingVertical: spacing[3],
-    backgroundColor: colors.neutral[0],
-    borderBottomWidth: borders.widths.thin,
-    borderBottomColor: colors.neutral[200],
+  actionButton: {
+    padding: spacing[2],
   },
   
   backButton: {
     padding: spacing[2],
   },
   
-  actionButton: {
-    padding: spacing[2],
+  container: {
+    alignItems: 'center',
+    backgroundColor: colors.neutral[0],
+    borderBottomColor: colors.neutral[200],
+    borderBottomWidth: borders.widths.thin,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: spacing[4],
+    paddingVertical: spacing[3],
   },
   
   placeholder: {

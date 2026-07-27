@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useRootNavigation } from '../../hooks/useNavigation';
 import { Ionicons } from '@expo/vector-icons';
 import { Button, Input, Card } from '../../components';
 import { colors } from '../../theme/colors';
@@ -8,7 +8,7 @@ import { typography } from '../../theme/typography';
 import { spacing } from '../../theme/spacing';
 
 export const ForgotPasswordScreen: React.FC = () => {
-  const navigation = useNavigation();
+  const navigation = useRootNavigation();
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -85,81 +85,81 @@ export const ForgotPasswordScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.neutral[50],
-  },
-  content: {
-    padding: spacing[4],
-    paddingTop: spacing[8],
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: spacing[8],
-  },
   backButton: {
-    position: 'absolute',
     left: 0,
-    top: 0,
     padding: spacing[2],
+    position: 'absolute',
+    top: 0,
   },
-  logo: {
-    ...typography.variants.h1,
-    color: colors.primary[500],
-    marginBottom: spacing[2],
-  },
-  subtitle: {
-    ...typography.variants.body,
-    color: colors.neutral[600],
+  backButtonStyle: {
+    marginTop: spacing[4],
   },
   card: {
     padding: spacing[6],
   },
-  title: {
-    ...typography.variants.h3,
-    color: colors.neutral[900],
-    marginBottom: spacing[2],
+  container: {
+    backgroundColor: colors.neutral[50],
+    flex: 1,
+  },
+  content: {
+    padding: spacing[4],
+    paddingTop: spacing[8],
   },
   description: {
     ...typography.variants.body,
     color: colors.neutral[600],
     marginBottom: spacing[6],
   },
-  resetButton: {
-    marginTop: spacing[4],
-  },
-  successContainer: {
-    alignItems: 'center',
-    padding: spacing[4],
-  },
-  successTitle: {
-    ...typography.variants.h3,
-    color: colors.neutral[900],
-    marginTop: spacing[4],
-    marginBottom: spacing[2],
-  },
-  successText: {
-    ...typography.variants.body,
-    color: colors.neutral[600],
-    textAlign: 'center',
-    marginBottom: spacing[6],
-  },
-  backButtonStyle: {
-    marginTop: spacing[4],
-  },
   footer: {
     flexDirection: 'row',
     justifyContent: 'center',
     marginTop: spacing[6],
-  },
-  footerText: {
-    ...typography.variants.body,
-    color: colors.neutral[600],
   },
   footerLink: {
     ...typography.variants.body,
     color: colors.primary[500],
     fontWeight: typography.weights.semibold,
     marginLeft: spacing[1],
+  },
+  footerText: {
+    ...typography.variants.body,
+    color: colors.neutral[600],
+  },
+  header: {
+    alignItems: 'center',
+    marginBottom: spacing[8],
+  },
+  logo: {
+    ...typography.variants.h1,
+    color: colors.primary[500],
+    marginBottom: spacing[2],
+  },
+  resetButton: {
+    marginTop: spacing[4],
+  },
+  subtitle: {
+    ...typography.variants.body,
+    color: colors.neutral[600],
+  },
+  successContainer: {
+    alignItems: 'center',
+    padding: spacing[4],
+  },
+  successText: {
+    ...typography.variants.body,
+    color: colors.neutral[600],
+    marginBottom: spacing[6],
+    textAlign: 'center',
+  },
+  successTitle: {
+    ...typography.variants.h3,
+    color: colors.neutral[900],
+    marginBottom: spacing[2],
+    marginTop: spacing[4],
+  },
+  title: {
+    ...typography.variants.h3,
+    color: colors.neutral[900],
+    marginBottom: spacing[2],
   },
 });

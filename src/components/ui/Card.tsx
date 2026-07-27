@@ -44,12 +44,12 @@ const styles = StyleSheet.create({
     ...shadows.md,
   },
   
-  variant_outlined: {
-    borderWidth: borders.widths.medium,
-    borderColor: colors.neutral[200],
-  },
-  
   variant_elevated: {
     ...shadows.lg,
+  },
+  
+  variant_outlined: {
+    borderColor: colors.neutral[200],
+    borderWidth: borders.widths.medium,
   },
 });

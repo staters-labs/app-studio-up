@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useRootNavigation } from '../../hooks/useNavigation';
 import { Ionicons } from '@expo/vector-icons';
 import { Card, Button } from '../../components';
 import { colors } from '../../theme/colors';
@@ -9,7 +9,7 @@ import { spacing } from '../../theme/spacing';
 import { useAppStore } from '../../stores/useAppStore';
 
 export const HomeScreen: React.FC = () => {
-  const navigation = useNavigation<any>();
+  const navigation = useRootNavigation();
   const { user, studio } = useAppStore();
 
   const quickActions = [
@@ -82,7 +82,7 @@ export const HomeScreen: React.FC = () => {
             onPress={action.onPress}
           >
             <View style={[styles.quickActionIcon, { backgroundColor: action.color + '20' }]}>
-              <Ionicons name={action.icon as any} size={24} color={action.color} />
+              <Ionicons name={action.icon as React.ComponentProps<typeof Ionicons>['name']} size={24} color={action.color} />
             </View>
             <Text style={styles.quickActionTitle}>{action.title}</Text>
           </TouchableOpacity>
@@ -113,72 +113,42 @@ export const HomeScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: colors.neutral[50],
+    flex: 1,
   },
   content: {
     padding: spacing[4],
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  emptyState: {
     alignItems: 'center',
-    marginBottom: spacing[6],
-    paddingTop: spacing[4],
+    padding: spacing[6],
+  },
+  emptyText: {
+    ...typography.variants.body,
+    color: colors.neutral[500],
+    marginVertical: spacing[3],
   },
   greeting: {
     ...typography.variants.body,
     color: colors.neutral[600],
   },
-  studioName: {
-    ...typography.variants.h3,
-    color: colors.neutral[900],
+  header: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: spacing[6],
+    paddingTop: spacing[4],
   },
   profileButton: {
     padding: spacing[1],
   },
-  summaryCard: {
-    marginBottom: spacing[6],
-  },
-  summaryTitle: {
-    ...typography.variants.h4,
-    color: colors.neutral[900],
-    marginBottom: spacing[4],
-  },
-  summaryGrid: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  summaryItem: {
-    alignItems: 'center',
-  },
-  summaryValue: {
-    ...typography.variants.h3,
-    color: colors.primary[500],
-    marginBottom: spacing[1],
-  },
-  summaryLabel: {
-    ...typography.variants.caption,
-    color: colors.neutral[600],
-  },
-  sectionTitle: {
-    ...typography.variants.h4,
-    color: colors.neutral[900],
-    marginBottom: spacing[4],
-  },
-  quickActionsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    marginBottom: spacing[6],
-  },
   quickAction: {
-    width: '48%',
+    alignItems: 'center',
     backgroundColor: colors.neutral[0],
     borderRadius: 12,
-    padding: spacing[4],
-    alignItems: 'center',
     marginBottom: spacing[3],
+    padding: spacing[4],
+    width: '48%',
     ...Platform.select({
       ios: {
         shadowColor: '#000',
@@ -192,42 +162,72 @@ const styles = StyleSheet.create({
     }),
   },
   quickActionIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: 24,
+    height: 48,
+    justifyContent: 'center',
     marginBottom: spacing[2],
+    width: 48,
   },
   quickActionTitle: {
     ...typography.variants.bodySmall,
     color: colors.neutral[700],
     fontWeight: typography.weights.medium,
   },
+  quickActionsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    marginBottom: spacing[6],
+  },
   recentCard: {
     marginBottom: spacing[6],
   },
   recentHeader: {
+    alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
     marginBottom: spacing[4],
   },
   recentTitle: {
     ...typography.variants.h4,
     color: colors.neutral[900],
   },
+  sectionTitle: {
+    ...typography.variants.h4,
+    color: colors.neutral[900],
+    marginBottom: spacing[4],
+  },
   seeAll: {
     ...typography.variants.bodySmall,
     color: colors.primary[500],
   },
-  emptyState: {
-    alignItems: 'center',
-    padding: spacing[6],
+  studioName: {
+    ...typography.variants.h3,
+    color: colors.neutral[900],
   },
-  emptyText: {
-    ...typography.variants.body,
-    color: colors.neutral[500],
-    marginVertical: spacing[3],
+  summaryCard: {
+    marginBottom: spacing[6],
+  },
+  summaryGrid: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  summaryItem: {
+    alignItems: 'center',
+  },
+  summaryLabel: {
+    ...typography.variants.caption,
+    color: colors.neutral[600],
+  },
+  summaryTitle: {
+    ...typography.variants.h4,
+    color: colors.neutral[900],
+    marginBottom: spacing[4],
+  },
+  summaryValue: {
+    ...typography.variants.h3,
+    color: colors.primary[500],
+    marginBottom: spacing[1],
   },
 });

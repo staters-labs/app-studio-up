@@ -6,6 +6,8 @@ import {
   StyleSheet,
   TextInputProps,
   ViewStyle,
+  StyleProp,
+  TextStyle,
 } from 'react-native';
 import { colors } from '../../theme/colors';
 import { typography } from '../../theme/typography';
@@ -42,14 +44,14 @@ export const Input: React.FC<InputProps> = ({
     styles.inputContainer,
     isFocused && styles.inputContainerFocused,
     error && styles.inputContainerError,
-  ];
+  ].filter(Boolean) as StyleProp<ViewStyle>[];
 
   const inputStyles = [
     styles.input,
     leftIcon && styles.inputWithLeftIcon,
     rightIcon && styles.inputWithRightIcon,
     style,
-  ];
+  ].filter(Boolean) as StyleProp<TextStyle>[];
 
   return (
     <View style={containerStyles}>
@@ -83,35 +85,43 @@ const styles = StyleSheet.create({
     marginBottom: spacing[4],
   },
   
-  label: {
-    ...typography.variants.bodySmall,
-    color: colors.neutral[700],
-    marginBottom: spacing[1],
+  errorText: {
+    color: colors.error[500],
   },
   
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: borders.widths.medium,
-    borderColor: colors.neutral[300],
-    borderRadius: borders.radii.md,
-    backgroundColor: colors.neutral[0],
+  helperText: {
+    ...typography.variants.caption,
+    color: colors.neutral[600],
+    marginTop: spacing[1],
   },
   
-  inputContainerFocused: {
-    borderColor: colors.primary[500],
-  },
-  
-  inputContainerError: {
-    borderColor: colors.error[500],
+  iconContainer: {
+    paddingHorizontal: spacing[3],
   },
   
   input: {
     flex: 1,
     ...typography.variants.body,
     color: colors.neutral[900],
-    paddingVertical: spacing[3],
     paddingHorizontal: spacing[4],
+    paddingVertical: spacing[3],
+  },
+  
+  inputContainer: {
+    alignItems: 'center',
+    backgroundColor: colors.neutral[0],
+    borderColor: colors.neutral[300],
+    borderRadius: borders.radii.md,
+    borderWidth: borders.widths.medium,
+    flexDirection: 'row',
+  },
+  
+  inputContainerError: {
+    borderColor: colors.error[500],
+  },
+  
+  inputContainerFocused: {
+    borderColor: colors.primary[500],
   },
   
   inputWithLeftIcon: {
@@ -122,17 +132,9 @@ const styles = StyleSheet.create({
     paddingRight: spacing[1],
   },
   
-  iconContainer: {
-    paddingHorizontal: spacing[3],
-  },
-  
-  helperText: {
-    ...typography.variants.caption,
-    color: colors.neutral[600],
-    marginTop: spacing[1],
-  },
-  
-  errorText: {
-    color: colors.error[500],
+  label: {
+    ...typography.variants.bodySmall,
+    color: colors.neutral[700],
+    marginBottom: spacing[1],
   },
 });

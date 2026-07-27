@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { Header, Card, Button } from '../../components';
 import { colors } from '../../theme/colors';
@@ -9,7 +8,6 @@ import { spacing } from '../../theme/spacing';
 import { useAppStore } from '../../stores/useAppStore';
 
 export const ProfileScreen: React.FC = () => {
-  const navigation = useNavigation();
   const { user, studio, logout } = useAppStore();
 
   const menuItems = [
@@ -89,7 +87,7 @@ export const ProfileScreen: React.FC = () => {
               onPress={item.onPress}
             >
               <View style={styles.menuItemLeft}>
-                <Ionicons name={item.icon as any} size={20} color={colors.neutral[700]} />
+                <Ionicons name={item.icon as React.ComponentProps<typeof Ionicons>['name']} size={20} color={colors.neutral[700]} />
                 <Text style={styles.menuItemTitle}>{item.title}</Text>
               </View>
               <Ionicons name="chevron-forward" size={20} color={colors.neutral[400]} />
@@ -109,9 +107,26 @@ export const ProfileScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
+  avatar: {
+    alignItems: 'center',
+    backgroundColor: colors.primary[500],
+    borderRadius: 40,
+    height: 80,
+    justifyContent: 'center',
+    marginBottom: spacing[3],
+    width: 80,
+  },
+  avatarContainer: {
+    alignItems: 'center',
+    padding: spacing[4],
+  },
+  avatarText: {
+    ...typography.variants.h1,
+    color: colors.neutral[0],
+  },
   container: {
-    flex: 1,
     backgroundColor: colors.neutral[50],
+    flex: 1,
   },
   content: {
     flex: 1,
@@ -119,88 +134,71 @@ const styles = StyleSheet.create({
   contentContainer: {
     padding: spacing[4],
   },
-  profileCard: {
-    marginBottom: spacing[4],
-  },
-  avatarContainer: {
-    alignItems: 'center',
-    padding: spacing[4],
-  },
-  avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: colors.primary[500],
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: spacing[3],
-  },
-  avatarText: {
-    ...typography.variants.h1,
-    color: colors.neutral[0],
-  },
-  userName: {
-    ...typography.variants.h3,
-    color: colors.neutral[900],
-    marginBottom: spacing[1],
-  },
-  userEmail: {
-    ...typography.variants.body,
-    color: colors.neutral[600],
-    marginBottom: spacing[1],
-  },
-  userRole: {
-    ...typography.variants.bodySmall,
-    color: colors.primary[500],
-    fontWeight: typography.weights.medium,
-  },
-  studioCard: {
-    marginBottom: spacing[4],
-  },
-  studioTitle: {
-    ...typography.variants.h4,
-    color: colors.neutral[900],
-    marginBottom: spacing[3],
-  },
-  studioInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  studioDetails: {
-    marginLeft: spacing[3],
-  },
-  studioName: {
-    ...typography.variants.body,
-    color: colors.neutral[900],
-    fontWeight: typography.weights.medium,
-  },
-  studioType: {
-    ...typography.variants.bodySmall,
-    color: colors.neutral[600],
+  logoutButton: {
+    marginTop: spacing[2],
   },
   menuCard: {
     marginBottom: spacing[4],
   },
   menuItem: {
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
     justifyContent: 'space-between',
     paddingVertical: spacing[4],
   },
   menuItemBorder: {
-    borderBottomWidth: 1,
     borderBottomColor: colors.neutral[200],
+    borderBottomWidth: 1,
   },
   menuItemLeft: {
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
   },
   menuItemTitle: {
     ...typography.variants.body,
     color: colors.neutral[900],
     marginLeft: spacing[3],
   },
-  logoutButton: {
-    marginTop: spacing[2],
+  profileCard: {
+    marginBottom: spacing[4],
+  },
+  studioCard: {
+    marginBottom: spacing[4],
+  },
+  studioDetails: {
+    marginLeft: spacing[3],
+  },
+  studioInfo: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  studioName: {
+    ...typography.variants.body,
+    color: colors.neutral[900],
+    fontWeight: typography.weights.medium,
+  },
+  studioTitle: {
+    ...typography.variants.h4,
+    color: colors.neutral[900],
+    marginBottom: spacing[3],
+  },
+  studioType: {
+    ...typography.variants.bodySmall,
+    color: colors.neutral[600],
+  },
+  userEmail: {
+    ...typography.variants.body,
+    color: colors.neutral[600],
+    marginBottom: spacing[1],
+  },
+  userName: {
+    ...typography.variants.h3,
+    color: colors.neutral[900],
+    marginBottom: spacing[1],
+  },
+  userRole: {
+    ...typography.variants.bodySmall,
+    color: colors.primary[500],
+    fontWeight: typography.weights.medium,
   },
 });

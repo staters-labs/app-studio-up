@@ -49,8 +49,8 @@ export const CashScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: colors.neutral[50],
+    flex: 1,
   },
   content: {
     flex: 1,
@@ -58,39 +58,32 @@ const styles = StyleSheet.create({
   contentContainer: {
     padding: spacing[4],
   },
-  summaryCard: {
+  divider: {
+    backgroundColor: colors.neutral[200],
+    height: 1,
+    marginVertical: spacing[4],
+  },
+  emptyState: {
+    alignItems: 'center',
+    padding: spacing[6],
+  },
+  emptyText: {
+    ...typography.variants.body,
+    color: colors.neutral[500],
+    marginTop: spacing[3],
+  },
+  entriesCard: {
     marginBottom: spacing[4],
   },
-  summaryTitle: {
+  entriesTitle: {
     ...typography.variants.h4,
     color: colors.neutral[900],
     marginBottom: spacing[4],
   },
-  summaryGrid: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  summaryItem: {
-    alignItems: 'center',
-  },
-  summaryValue: {
-    ...typography.variants.h4,
-    color: colors.primary[500],
-    marginBottom: spacing[1],
-  },
-  summaryLabel: {
-    ...typography.variants.caption,
-    color: colors.neutral[600],
-  },
-  divider: {
-    height: 1,
-    backgroundColor: colors.neutral[200],
-    marginVertical: spacing[4],
-  },
   profitContainer: {
+    alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
   },
   profitLabel: {
     ...typography.variants.body,
@@ -101,21 +94,28 @@ const styles = StyleSheet.create({
     ...typography.variants.h3,
     color: colors.success[500],
   },
-  entriesCard: {
+  summaryCard: {
     marginBottom: spacing[4],
   },
-  entriesTitle: {
+  summaryGrid: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  summaryItem: {
+    alignItems: 'center',
+  },
+  summaryLabel: {
+    ...typography.variants.caption,
+    color: colors.neutral[600],
+  },
+  summaryTitle: {
     ...typography.variants.h4,
     color: colors.neutral[900],
     marginBottom: spacing[4],
   },
-  emptyState: {
-    alignItems: 'center',
-    padding: spacing[6],
-  },
-  emptyText: {
-    ...typography.variants.body,
-    color: colors.neutral[500],
-    marginTop: spacing[3],
+  summaryValue: {
+    ...typography.variants.h4,
+    color: colors.primary[500],
+    marginBottom: spacing[1],
   },
 });

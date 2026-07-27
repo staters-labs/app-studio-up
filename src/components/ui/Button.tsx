@@ -73,10 +73,10 @@ export const Button: React.FC<ButtonProps> = ({
 
 const styles = StyleSheet.create({
   base: {
-    flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
     borderRadius: borders.radii.md,
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   
   // Variants
@@ -88,8 +88,8 @@ const styles = StyleSheet.create({
   },
   outline: {
     backgroundColor: 'transparent',
-    borderWidth: borders.widths.medium,
     borderColor: colors.primary[500],
+    borderWidth: borders.widths.medium,
   },
   ghost: {
     backgroundColor: 'transparent',
@@ -97,16 +97,16 @@ const styles = StyleSheet.create({
   
   // Sizes
   size_sm: {
-    paddingVertical: spacing[2],
     paddingHorizontal: spacing[3],
+    paddingVertical: spacing[2],
   },
   size_md: {
-    paddingVertical: spacing[3],
     paddingHorizontal: spacing[4],
+    paddingVertical: spacing[3],
   },
   size_lg: {
-    paddingVertical: spacing[4],
     paddingHorizontal: spacing[6],
+    paddingVertical: spacing[4],
   },
   
   // Disabled state

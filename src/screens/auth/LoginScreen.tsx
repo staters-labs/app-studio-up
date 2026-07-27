@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useRootNavigation } from '../../hooks/useNavigation';
 import { Ionicons } from '@expo/vector-icons';
 import { Button, Input, Card } from '../../components';
 import { colors } from '../../theme/colors';
@@ -9,7 +9,7 @@ import { spacing } from '../../theme/spacing';
 import { useAppStore } from '../../stores/useAppStore';
 
 export const LoginScreen: React.FC = () => {
-  const navigation = useNavigation<any>();
+  const navigation = useRootNavigation();
   const { setUser, setLoading, isLoading } = useAppStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -108,17 +108,64 @@ export const LoginScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
+  card: {
+    padding: spacing[6],
+  },
   container: {
-    flex: 1,
     backgroundColor: colors.neutral[50],
+    flex: 1,
   },
   content: {
     padding: spacing[4],
     paddingTop: spacing[12],
   },
+  divider: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginVertical: spacing[6],
+  },
+  dividerLine: {
+    backgroundColor: colors.neutral[300],
+    flex: 1,
+    height: 1,
+  },
+  dividerText: {
+    ...typography.variants.bodySmall,
+    color: colors.neutral[500],
+    marginHorizontal: spacing[3],
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: spacing[6],
+  },
+  footerLink: {
+    ...typography.variants.body,
+    color: colors.primary[500],
+    fontWeight: typography.weights.semibold,
+    marginLeft: spacing[1],
+  },
+  footerText: {
+    ...typography.variants.body,
+    color: colors.neutral[600],
+  },
+  forgotPassword: {
+    alignSelf: 'flex-end',
+    marginBottom: spacing[4],
+  },
+  forgotPasswordText: {
+    ...typography.variants.bodySmall,
+    color: colors.primary[500],
+  },
+  googleButton: {
+    marginTop: spacing[2],
+  },
   header: {
     alignItems: 'center',
     marginBottom: spacing[8],
+  },
+  loginButton: {
+    marginTop: spacing[2],
   },
   logo: {
     ...typography.variants.h1,
@@ -129,56 +176,9 @@ const styles = StyleSheet.create({
     ...typography.variants.body,
     color: colors.neutral[600],
   },
-  card: {
-    padding: spacing[6],
-  },
   title: {
     ...typography.variants.h3,
     color: colors.neutral[900],
     marginBottom: spacing[6],
-  },
-  forgotPassword: {
-    alignSelf: 'flex-end',
-    marginBottom: spacing[4],
-  },
-  forgotPasswordText: {
-    ...typography.variants.bodySmall,
-    color: colors.primary[500],
-  },
-  loginButton: {
-    marginTop: spacing[2],
-  },
-  divider: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: spacing[6],
-  },
-  dividerLine: {
-    flex: 1,
-    height: 1,
-    backgroundColor: colors.neutral[300],
-  },
-  dividerText: {
-    ...typography.variants.bodySmall,
-    color: colors.neutral[500],
-    marginHorizontal: spacing[3],
-  },
-  googleButton: {
-    marginTop: spacing[2],
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: spacing[6],
-  },
-  footerText: {
-    ...typography.variants.body,
-    color: colors.neutral[600],
-  },
-  footerLink: {
-    ...typography.variants.body,
-    color: colors.primary[500],
-    fontWeight: typography.weights.semibold,
-    marginLeft: spacing[1],
   },
 });

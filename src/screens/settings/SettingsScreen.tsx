@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { Header, Card } from '../../components';
 import { colors } from '../../theme/colors';
@@ -8,7 +7,6 @@ import { typography } from '../../theme/typography';
 import { spacing } from '../../theme/spacing';
 
 export const SettingsScreen: React.FC = () => {
-  const navigation = useNavigation();
   const [notificationsEnabled, setNotificationsEnabled] = React.useState(true);
   const [darkModeEnabled, setDarkModeEnabled] = React.useState(false);
 
@@ -100,20 +98,20 @@ export const SettingsScreen: React.FC = () => {
                 <Text
                   style={[
                     styles.settingTitle,
-                    item.destructive && styles.destructiveText,
+                    'destructive' in item && item.destructive && styles.destructiveText,
                   ]}
                 >
                   {item.title}
                 </Text>
                 {item.type === 'switch' ? (
                   <Switch
-                    value={item.value}
-                    onValueChange={item.onValueChange}
+                    value={'value' in item ? item.value : false}
+                    onValueChange={'onValueChange' in item ? item.onValueChange : () => {}}
                     trackColor={{ false: colors.neutral[300], true: colors.primary[200] }}
-                    thumbColor={item.value ? colors.primary[500] : colors.neutral[400]}
+                    thumbColor={'value' in item && item.value ? colors.primary[500] : colors.neutral[400]}
                   />
                 ) : (
-                  <TouchableOpacity onPress={item.onPress}>
+                  <TouchableOpacity onPress={'onPress' in item ? item.onPress : () => {}}>
                     <Ionicons name="chevron-forward" size={20} color={colors.neutral[400]} />
                   </TouchableOpacity>
                 )}
@@ -132,14 +130,17 @@ export const SettingsScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: colors.neutral[50],
+    flex: 1,
   },
   content: {
     flex: 1,
   },
   contentContainer: {
     padding: spacing[4],
+  },
+  destructiveText: {
+    color: colors.error[500],
   },
   sectionCard: {
     marginBottom: spacing[4],
@@ -150,26 +151,23 @@ const styles = StyleSheet.create({
     marginBottom: spacing[3],
   },
   settingItem: {
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
     justifyContent: 'space-between',
     paddingVertical: spacing[3],
   },
   settingItemBorder: {
-    borderBottomWidth: 1,
     borderBottomColor: colors.neutral[200],
+    borderBottomWidth: 1,
   },
   settingTitle: {
     ...typography.variants.body,
     color: colors.neutral[900],
   },
-  destructiveText: {
-    color: colors.error[500],
-  },
   versionContainer: {
     alignItems: 'center',
-    marginTop: spacing[4],
     marginBottom: spacing[8],
+    marginTop: spacing[4],
   },
   versionText: {
     ...typography.variants.bodySmall,

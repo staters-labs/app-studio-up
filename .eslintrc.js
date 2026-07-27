@@ -27,6 +27,8 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     'react-native/no-color-literals': 'off',
     'react-native/no-inline-styles': 'off',
+    'react-native/no-unused-styles': 'off',
+    'react-native/sort-styles': 'off',
   },
   env: {
     browser: true,

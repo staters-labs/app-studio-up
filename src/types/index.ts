@@ -191,8 +191,10 @@ export type RootStackParamList = {
   NewService: undefined;
   Providers: undefined;
   ProviderDetail: { providerId: string };
+  NewProvider: undefined;
   Products: undefined;
   ProductDetail: { productId: string };
+  NewProduct: undefined;
   Cash: undefined;
   ProviderStatement: { providerId: string };
   Profile: undefined;

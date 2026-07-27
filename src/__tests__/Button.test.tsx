@@ -1,9 +1,9 @@
 import React from 'react';
-import { render } from '@testing-library/react-native';
+import { render, fireEvent } from '@testing-library/react-native';
 import { Button } from '../components/ui/Button';
 
 describe('Button', () => {
-  it('renders correctly', () => {
+  it('renders title correctly', () => {
     const { getByText } = render(
       <Button title="Test Button" onPress={() => {}} />
     );
@@ -15,7 +15,7 @@ describe('Button', () => {
     const { getByText } = render(
       <Button title="Test Button" onPress={onPressMock} />
     );
-    getByText('Test Button').props.onPress();
+    fireEvent.press(getByText('Test Button'));
     expect(onPressMock).toHaveBeenCalledTimes(1);
   });
 
@@ -26,12 +26,12 @@ describe('Button', () => {
     expect(queryByText('Test Button')).toBeNull();
   });
 
-  it('is disabled when disabled prop is true', () => {
+  it('does not call onPress when disabled', () => {
     const onPressMock = jest.fn();
     const { getByText } = render(
       <Button title="Test Button" onPress={onPressMock} disabled />
     );
-    getByText('Test Button').props.onPress();
+    fireEvent.press(getByText('Test Button'));
     expect(onPressMock).not.toHaveBeenCalled();
   });
 });

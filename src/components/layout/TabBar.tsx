@@ -57,19 +57,12 @@ export const TabBar: React.FC<TabBarProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
     backgroundColor: colors.neutral[0],
-    borderTopWidth: borders.widths.thin,
     borderTopColor: colors.neutral[200],
+    borderTopWidth: borders.widths.thin,
+    flexDirection: 'row',
     paddingBottom: spacing[2],
     ...shadows.md,
-  },
-  
-  tab: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: spacing[2],
   },
   
   label: {
@@ -81,5 +74,12 @@ const styles = StyleSheet.create({
   labelActive: {
     color: colors.primary[500],
     fontWeight: typography.weights.semibold,
+  },
+  
+  tab: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    paddingVertical: spacing[2],
   },
 });
