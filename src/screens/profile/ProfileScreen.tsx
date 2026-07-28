@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useUser, useClerk } from '@clerk/expo';
 import { Header, Card, Button } from '../../components';
 import { colors } from '../../theme/colors';
 import { typography } from '../../theme/typography';
@@ -8,7 +9,9 @@ import { spacing } from '../../theme/spacing';
 import { useAppStore } from '../../stores/useAppStore';
 
 export const ProfileScreen: React.FC = () => {
-  const { user, studio, logout } = useAppStore();
+  const { user: clerkUser } = useUser();
+  const { signOut } = useClerk();
+  const { studio } = useAppStore();
 
   const menuItems = [
     {
@@ -43,9 +46,15 @@ export const ProfileScreen: React.FC = () => {
     },
   ];
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await signOut();
   };
+
+  const displayName = clerkUser?.firstName
+    ? clerkUser.lastName
+      ? `${clerkUser.firstName} ${clerkUser.lastName}`
+      : clerkUser.firstName
+    : 'Usuário';
 
   return (
     <View style={styles.container}>
@@ -56,12 +65,11 @@ export const ProfileScreen: React.FC = () => {
           <View style={styles.avatarContainer}>
             <View style={styles.avatar}>
               <Text style={styles.avatarText}>
-                {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                {clerkUser?.firstName?.charAt(0)?.toUpperCase() || 'U'}
               </Text>
             </View>
-            <Text style={styles.userName}>{user?.name || 'Usuário'}</Text>
-            <Text style={styles.userEmail}>{user?.email || 'email@exemplo.com'}</Text>
-            <Text style={styles.userRole}>{user?.role || 'OWNER'}</Text>
+            <Text style={styles.userName}>{displayName}</Text>
+            <Text style={styles.userEmail}>{clerkUser?.emailAddresses?.[0]?.emailAddress || ''}</Text>
           </View>
         </Card>
 
@@ -195,10 +203,5 @@ const styles = StyleSheet.create({
     ...typography.variants.h3,
     color: colors.neutral[900],
     marginBottom: spacing[1],
-  },
-  userRole: {
-    ...typography.variants.bodySmall,
-    color: colors.primary[500],
-    fontWeight: typography.weights.medium,
   },
 });

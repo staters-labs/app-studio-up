@@ -1,42 +1,98 @@
 import React, { useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useRootNavigation } from '../../hooks/useNavigation';
 import { Ionicons } from '@expo/vector-icons';
+import { useSignUp } from '@clerk/expo';
 import { Button, Input, GoogleIcon } from '../../components';
 import { AuthLayout } from './AuthLayout';
 import { colors } from '../../theme/colors';
 import { spacing } from '../../theme/spacing';
 import { sizes } from '../../theme/sizes';
-import { useAppStore } from '../../stores/useAppStore';
 
 export const RegisterScreen: React.FC = () => {
   const navigation = useRootNavigation();
-  const { setUser, setLoading, isLoading } = useAppStore();
+  const { signUp, fetchStatus } = useSignUp();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [pendingVerification, setPendingVerification] = useState(false);
+  const [code, setCode] = useState('');
 
   const handleRegister = async () => {
     if (!name || !email || !password) return;
 
-    setLoading(true);
-    // TODO: Implement actual Clerk registration
-    setTimeout(() => {
-      setUser({
-        id: '1',
-        email,
-        name,
-        role: 'OWNER',
-      });
-      setLoading(false);
-    }, 1000);
+    const { error } = await signUp.password({
+      emailAddress: email,
+      password,
+    });
+
+    if (error) {
+      Alert.alert('Erro ao cadastrar', error.message || 'Erro ao criar conta.');
+      return;
+    }
+
+    await signUp.verifications.sendEmailCode();
+    setPendingVerification(true);
+  };
+
+  const handleVerifyEmail = async () => {
+    if (!code) return;
+
+    const { error } = await signUp.verifications.verifyEmailCode({ code });
+
+    if (error) {
+      Alert.alert('Erro na verificação', error.message || 'Código inválido.');
+      return;
+    }
+
+    if (signUp.status === 'complete') {
+      await signUp.finalize();
+    }
   };
 
   const handleGoogleSignUp = async () => {
-    // TODO: Implement Google OAuth with Clerk
-    console.log('Google sign up');
+    Alert.alert('Em breve', 'Cadastro com Google será implementado em breve.');
   };
+
+  if (pendingVerification) {
+    return (
+      <AuthLayout title="Verificar e-mail">
+        <Input
+          label="Código de verificação"
+          value={code}
+          onChangeText={setCode}
+          placeholder="Digite o código enviado ao seu e-mail"
+          keyboardType="number-pad"
+          autoComplete="one-time-code"
+          leftIcon={
+            <Ionicons
+              name="key-outline"
+              size={sizes.icon.md}
+              color={colors.text.placeholder}
+            />
+          }
+        />
+
+        <Button
+          title="Verificar"
+          onPress={handleVerifyEmail}
+          loading={fetchStatus === 'fetching'}
+          style={styles.primaryButton}
+        />
+
+        <Button
+          title="Voltar"
+          onPress={() => {
+            setPendingVerification(false);
+            setCode('');
+          }}
+          variant="soft"
+          style={styles.stackedButton}
+        />
+      </AuthLayout>
+    );
+  }
 
   return (
     <AuthLayout title="Criar conta">
@@ -106,7 +162,7 @@ export const RegisterScreen: React.FC = () => {
       <Button
         title="Criar conta"
         onPress={handleRegister}
-        loading={isLoading}
+        loading={fetchStatus === 'fetching'}
         style={styles.primaryButton}
       />
 

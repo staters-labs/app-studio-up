@@ -1,10 +1,11 @@
 import React from 'react';
+import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
+import { useAuth } from '@clerk/expo';
 
-import { useAppStore } from '../stores/useAppStore';
 import { colors } from '../theme/colors';
 
 // Auth screens
@@ -65,21 +66,27 @@ const MainTabs = () => {
   );
 };
 
-export const Navigation = () => {
-  const { isAuthenticated } = useAppStore();
+function RootLayout() {
+  const { isLoaded, isSignedIn } = useAuth();
+
+  if (!isLoaded) {
+    return (
+      <View style={styles.loading}>
+        <ActivityIndicator size="large" color={colors.primary[500]} />
+      </View>
+    );
+  }
 
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {!isAuthenticated ? (
-          // Auth stack
+        {!isSignedIn ? (
           <Stack.Group>
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Register" component={RegisterScreen} />
             <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
           </Stack.Group>
         ) : (
-          // Main stack
           <Stack.Group>
             <Stack.Screen name="Main" component={MainTabs} />
             <Stack.Screen name="Profile" component={ProfileScreen} />
@@ -89,4 +96,15 @@ export const Navigation = () => {
       </Stack.Navigator>
     </NavigationContainer>
   );
-};
+}
+
+const styles = StyleSheet.create({
+  loading: {
+    alignItems: 'center',
+    backgroundColor: colors.neutral[0],
+    flex: 1,
+    justifyContent: 'center',
+  },
+});
+
+export { RootLayout as Navigation };

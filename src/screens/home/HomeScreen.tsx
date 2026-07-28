@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform } from 'react-native';
 import { useRootNavigation } from '../../hooks/useNavigation';
 import { Ionicons } from '@expo/vector-icons';
+import { useUser } from '@clerk/expo';
 import { Card, Button } from '../../components';
 import { colors } from '../../theme/colors';
 import { typography } from '../../theme/typography';
@@ -10,7 +11,10 @@ import { useAppStore } from '../../stores/useAppStore';
 
 export const HomeScreen: React.FC = () => {
   const navigation = useRootNavigation();
-  const { user, studio } = useAppStore();
+  const { user: clerkUser } = useUser();
+  const { studio } = useAppStore();
+
+  const firstName = clerkUser?.firstName || clerkUser?.username?.split(' ')[0] || 'Usuário';
 
   const quickActions = [
     {
@@ -47,7 +51,7 @@ export const HomeScreen: React.FC = () => {
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.header}>
         <View>
-          <Text style={styles.greeting}>Olá, {user?.name?.split(' ')[0] || 'Usuário'}</Text>
+          <Text style={styles.greeting}>Olá, {firstName}</Text>
           <Text style={styles.studioName}>{studio?.name || 'Seu Studio'}</Text>
         </View>
         <TouchableOpacity style={styles.profileButton} onPress={() => navigation.navigate('Profile')}>

@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
-import { Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useRootNavigation } from '../../hooks/useNavigation';
 import { Ionicons } from '@expo/vector-icons';
+import { useSignIn } from '@clerk/expo';
 import { Button, Input, GoogleIcon } from '../../components';
 import { AuthLayout } from './AuthLayout';
 import { colors } from '../../theme/colors';
 import { typography } from '../../theme/typography';
 import { spacing } from '../../theme/spacing';
 import { sizes } from '../../theme/sizes';
-import { useAppStore } from '../../stores/useAppStore';
 
 export const LoginScreen: React.FC = () => {
   const navigation = useRootNavigation();
-  const { setUser, setLoading, isLoading } = useAppStore();
+  const { signIn, fetchStatus } = useSignIn();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -20,22 +20,23 @@ export const LoginScreen: React.FC = () => {
   const handleLogin = async () => {
     if (!email || !password) return;
 
-    setLoading(true);
-    // TODO: Implement actual Clerk authentication
-    setTimeout(() => {
-      setUser({
-        id: '1',
-        email,
-        name: 'Usuário Teste',
-        role: 'OWNER',
-      });
-      setLoading(false);
-    }, 1000);
+    const { error } = await signIn.password({
+      emailAddress: email,
+      password,
+    });
+
+    if (error) {
+      Alert.alert('Erro ao entrar', error.message || 'E-mail ou senha incorretos.');
+      return;
+    }
+
+    if (signIn.status === 'complete') {
+      await signIn.finalize();
+    }
   };
 
   const handleGoogleLogin = async () => {
-    // TODO: Implement Google OAuth with Clerk
-    console.log('Google login');
+    Alert.alert('Em breve', 'Login com Google será implementado em breve.');
   };
 
   return (
@@ -90,7 +91,7 @@ export const LoginScreen: React.FC = () => {
       <Button
         title="Entrar"
         onPress={handleLogin}
-        loading={isLoading}
+        loading={fetchStatus === 'fetching'}
         style={styles.primaryButton}
       />
 
